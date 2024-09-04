@@ -16,7 +16,7 @@ public partial class EnemySpawnerSystem : SystemBase
             for (int i = 0; i < 100; i++) {
                 Entity spawnedEntity = EntityManager.Instantiate(enemySpawnerConfig.EnemyPrefabEntity);
                 SystemAPI.SetComponent(spawnedEntity, new LocalTransform {
-                    Position = new float3(UnityEngine.Random.Range(-10f, 10f), 0.6f, UnityEngine.Random.Range(-4f, 7f)),
+                    Position = new float3(UnityEngine.Random.Range(-50f, 50f), UnityEngine.Random.Range(-50f, 50f), UnityEngine.Random.Range(-50f, 50f)),
                     Rotation = quaternion.identity,
                     Scale = 1f
                 });
@@ -26,7 +26,7 @@ public partial class EnemySpawnerSystem : SystemBase
                 
                 SystemAPI.SetComponent(spawnedEntity, new EnemyMovementConfig {
                     Speed = enemyMovementConfig.Speed,
-                    TargetPosition = new float3(UnityEngine.Random.Range(-50f, 50f), UnityEngine.Random.Range(-50f, 50f), UnityEngine.Random.Range(-50f, 50f))
+                    TargetEntity = enemySpawnerConfig.PlayerEntity
                 });
             }
         }
