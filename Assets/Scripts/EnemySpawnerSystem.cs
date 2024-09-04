@@ -1,3 +1,4 @@
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -9,26 +10,31 @@ public partial class EnemySpawnerSystem : SystemBase
         RequireForUpdate<EnemySpawnerConfig>();
     }
 
+    [BurstCompile]
     protected override void OnUpdate() {
-        if (Input.GetKeyDown(KeyCode.A)) {
-            EnemySpawnerConfig enemySpawnerConfig = SystemAPI.GetSingleton<EnemySpawnerConfig>();
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            SpawnWave();
+        }
+    }
 
-            for (int i = 0; i < 100; i++) {
-                Entity spawnedEntity = EntityManager.Instantiate(enemySpawnerConfig.EnemyPrefabEntity);
-                SystemAPI.SetComponent(spawnedEntity, new LocalTransform {
-                    Position = new float3(UnityEngine.Random.Range(-50f, 50f), UnityEngine.Random.Range(-50f, 50f), UnityEngine.Random.Range(-50f, 50f)),
-                    Rotation = quaternion.identity,
-                    Scale = 1f
-                });
+    private void SpawnWave() {
+        EnemySpawnerConfig enemySpawnerConfig = SystemAPI.GetSingleton<EnemySpawnerConfig>();
+
+        for (int i = 0; i < 50; i++) {
+            Entity spawnedEntity = EntityManager.Instantiate(enemySpawnerConfig.EnemyPrefabEntity);
+            SystemAPI.SetComponent(spawnedEntity, new LocalTransform {
+                Position = new float3(UnityEngine.Random.Range(-14f, 14f), 0, UnityEngine.Random.Range(25f, 40f)),
+                Rotation = quaternion.identity,
+                Scale = 1f
+            });
                 
-                // get speed from EnemyMovementConfig
-                EnemyMovementConfig enemyMovementConfig = SystemAPI.GetComponent<EnemyMovementConfig>(spawnedEntity);
+            // get speed from EnemyMovementConfig
+            EnemyMovementConfig enemyMovementConfig = SystemAPI.GetComponent<EnemyMovementConfig>(spawnedEntity);
                 
-                SystemAPI.SetComponent(spawnedEntity, new EnemyMovementConfig {
-                    Speed = enemyMovementConfig.Speed,
-                    TargetEntity = enemySpawnerConfig.PlayerEntity
-                });
-            }
+            SystemAPI.SetComponent(spawnedEntity, new EnemyMovementConfig {
+                Speed = enemyMovementConfig.Speed,
+                TargetEntity = enemySpawnerConfig.PlayerEntity
+            });
         }
     }
 }

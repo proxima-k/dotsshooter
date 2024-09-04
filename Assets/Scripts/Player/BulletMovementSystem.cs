@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
+// [UpdateInGroup(typeof(SimulationSystemGroup))]
+// [UpdateBefore(typeof(TransformSystemGroup))]
 public partial class BulletMovementSystem : SystemBase {
     
     protected override void OnCreate() {
         RequireForUpdate<BulletConfig>();
     }
 
+    [BurstCompile]
     protected override void OnUpdate() {
         EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
         

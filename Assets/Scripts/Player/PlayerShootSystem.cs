@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+[UpdateBefore(typeof(TransformSystemGroup))]
 public partial class PlayerShootSystem : SystemBase
 {
     protected override void OnCreate() {
         RequireForUpdate<Player>();
     }
 
+    [BurstCompile]
     protected override void OnUpdate() {
         
         foreach ((RefRW<PlayerShootConfig> playerShootConfig, RefRO<LocalTransform> localTransform)
